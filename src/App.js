@@ -14,7 +14,7 @@ const Constellation = ({ onAnswer, name, answers, img }) => {
     <div>
       <img src={img} />
       {answers.map((answer) => (
-        <button onClick={onAnswer} key={answer}>
+        <button onClick={() => onAnswer(answer)} key={answer}>
           {answer}
         </button>
       ))}
@@ -66,7 +66,12 @@ const GameContainer = () => {
     setAnswers(tmpAnswers);
   };
 
-  const handleNextConstellation = () => {
+  const handleAnswer = (answer) => {
+    if (answer === constellation.target.name) {
+      console.log("BRAVO BG");
+    } else {
+      console.log("Nooooo Poto :///");
+    }
     setRandomConstellation();
   };
 
@@ -79,7 +84,7 @@ const GameContainer = () => {
           name={constellation.target.name}
           answers={answers}
           img={constellation.image.src}
-          onAnswer={handleNextConstellation}
+          onAnswer={handleAnswer}
         />
       )}
     </div>
