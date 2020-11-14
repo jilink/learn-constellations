@@ -1,0 +1,14 @@
+body {
+  background: #1d1135;
+  background: linear-gradient(to left, #000000, #1d1135);
+}
+.container {
+  margin: 30px;
+  color: #a8dadc;
+}
+
+.title {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
