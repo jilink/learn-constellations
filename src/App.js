@@ -9,25 +9,35 @@ import ConstellationSketcher, {
 const API_BASE = "https://www.strudel.org.uk/lookUP/json/?name=";
 const getConstellationUrl = (name) => `${API_BASE}${name}`;
 
-const Constellation = ({ name, img }) => {
+const Constellation = ({ onAnswer, name, answers, img }) => {
   return (
     <div>
-      <p>{name}</p>
       <img src={img} />
+      {answers.map((answer) => (
+        <button onClick={onAnswer} key={answer}>
+          {answer}
+        </button>
+      ))}
     </div>
   );
 };
 
 const GameContainer = () => {
   const [constellation, setConstellation] = React.useState([]);
+  const [answers, setAnswers] = React.useState([]);
   const [isLoading, setIsLoading] = React.useState(true);
+
   useEffect(() => {
-    getRandomConstellation();
+    setRandomConstellation();
   }, []);
-  const getRandomConstellation = () => {
+
+  useEffect(() => {
+    if (constellation.target) setRandomAnwsers(constellation.target.name);
+  }, [constellation]);
+
+  const setRandomConstellation = () => {
     setIsLoading(true);
     const index = Math.floor(Math.random() * constellationNames.length);
-
     axios
       .get(getConstellationUrl(constellationNames[index]))
       .then((response) => {
@@ -36,8 +46,28 @@ const GameContainer = () => {
       });
   };
 
+  const setRandomAnwsers = (rightAnswer) => {
+    const tmpAnswers = [];
+    tmpAnswers.push(rightAnswer);
+    while (tmpAnswers.length < 3) {
+      const addToEnd = Math.random() <= 0.5; // 1/2
+      const index = Math.floor(Math.random() * constellationNames.length);
+      const tmpConstellation = constellationNames[index];
+      if (tmpConstellation !== rightAnswer) {
+        if (addToEnd) {
+          tmpAnswers.push(tmpConstellation);
+        } else {
+          tmpAnswers.unshift(tmpConstellation);
+        }
+      }
+    }
+    console.log("right", rightAnswer);
+    console.log("array", tmpAnswers);
+    setAnswers(tmpAnswers);
+  };
+
   const handleNextConstellation = () => {
-    getRandomConstellation();
+    setRandomConstellation();
   };
 
   return (
@@ -47,10 +77,11 @@ const GameContainer = () => {
       ) : (
         <Constellation
           name={constellation.target.name}
+          answers={answers}
           img={constellation.image.src}
+          onAnswer={handleNextConstellation}
         />
       )}
-      <button onClick={handleNextConstellation}>NEXT</button>
     </div>
   );
 };
