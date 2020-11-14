@@ -1,9 +1,16 @@
-body {
-  background: #1d1135;
-  background: linear-gradient(to left, #000000, #1d1135);
+@media (min-width: 768px) {
+  body {
+    background: #1d1135;
+    background: linear-gradient(to left, #000000, #1d1135);
+  }
+}
+@media (max-width: 768px) {
+  body {
+    background: #000000;
+  }
 }
 .container {
-  margin: 30px;
+  margin: 3vw;
   color: #a8dadc;
 }
 
