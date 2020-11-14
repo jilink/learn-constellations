@@ -27,6 +27,21 @@ button:hover {
   background: #7649fe;
 }
 
+button.rightAnswer {
+  border-color: #33be92;
+}
+button.rightAnswer:hover {
+  background: #33be92;
+  border-color: #33be92;
+}
+button.wrongAnswer {
+  border-color: #de1d2d;
+}
+button.wrongAnswer:hover {
+  border-color: #de1d2d;
+  background: #de1d2d;
+}
+
 @media (min-width: 768px) {
   .answers {
     display: flex;

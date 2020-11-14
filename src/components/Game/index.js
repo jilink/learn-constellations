@@ -10,16 +10,32 @@ import ConstellationSketcher, {
 const API_BASE = "https://www.strudel.org.uk/lookUP/json/?name=";
 const getConstellationUrl = (name) => `${API_BASE}${name}`;
 
-const Constellation = ({ onAnswer, name, answers, img }) => {
+const Constellation = ({
+  showAnswer = false,
+  onAnswer,
+  name,
+  answers,
+  img,
+}) => {
   return (
     <>
       <ConstellationSketcher constellation={name} width="500" height="500" />
       <div className={styles.answers}>
-        {answers.map((answer) => (
-          <button onClick={() => onAnswer(answer)} key={answer}>
-            {answer}
-          </button>
-        ))}
+        {answers.map((answer) =>
+          showAnswer ? (
+            <button
+              className={answer[1] ? styles.rightAnswer : styles.wrongAnswer}
+              onClick={() => onAnswer(answer[0])}
+              key={answer[0]}
+            >
+              {answer[0]}
+            </button>
+          ) : (
+            <button onClick={() => onAnswer(answer[0])} key={answer[0]}>
+              {answer[0]}
+            </button>
+          )
+        )}
       </div>
     </>
   );
@@ -29,6 +45,7 @@ const GameContainer = () => {
   const [constellation, setConstellation] = React.useState([]);
   const [answers, setAnswers] = React.useState([]);
   const [isLoading, setIsLoading] = React.useState(true);
+  const [showAnswer, setShowAnswer] = React.useState(false);
 
   useEffect(() => {
     setRandomConstellation();
@@ -51,16 +68,16 @@ const GameContainer = () => {
 
   const setRandomAnwsers = (rightAnswer) => {
     const tmpAnswers = [];
-    tmpAnswers.push(rightAnswer);
+    tmpAnswers.push([rightAnswer, true]);
     while (tmpAnswers.length < 3) {
       const addToEnd = Math.random() <= 0.5; // 1/2
       const index = Math.floor(Math.random() * constellationNames.length);
       const tmpConstellation = constellationNames[index];
       if (tmpConstellation !== rightAnswer) {
         if (addToEnd) {
-          tmpAnswers.push(tmpConstellation);
+          tmpAnswers.push([tmpConstellation, false]);
         } else {
-          tmpAnswers.unshift(tmpConstellation);
+          tmpAnswers.unshift([tmpConstellation, false]);
         }
       }
     }
@@ -69,12 +86,15 @@ const GameContainer = () => {
   };
 
   const handleAnswer = (answer) => {
+    setShowAnswer(true);
     if (answer === constellation.target.name) {
       console.log("BRAVO BG");
     } else {
       console.log("Nooooo Poto :///", constellation.target.name);
     }
-    setRandomConstellation();
+    {
+      /*setRandomConstellation();*/
+    }
   };
 
   return (
@@ -83,6 +103,7 @@ const GameContainer = () => {
         <p> Loading ...</p>
       ) : (
         <Constellation
+          showAnswer={showAnswer}
           name={constellation.target.name}
           answers={answers}
           img={constellation.image.src}
