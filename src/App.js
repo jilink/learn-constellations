@@ -12,7 +12,7 @@ const getConstellationUrl = (name) => `${API_BASE}${name}`;
 const Constellation = ({ onAnswer, name, answers, img }) => {
   return (
     <div>
-      <img src={img} />
+      <ConstellationSketcher constellation={name} width="500" height="500" />
       {answers.map((answer) => (
         <button onClick={() => onAnswer(answer)} key={answer}>
           {answer}
