@@ -10,10 +10,11 @@ import ConstellationSketcher, {
 const API_BASE = "https://www.strudel.org.uk/lookUP/json/?name=";
 const getConstellationUrl = (name) => `${API_BASE}${name}`;
 
-const Score = ({ score, best }) => {
+const Score = ({ score, best, questions }) => {
   return (
     <div className={styles.scoreContainer}>
       <span>SCORE: {score}</span>
+      <span>CONSTELATIONS LEFT: {questions}</span>
       <span>BEST: {best}</span>
     </div>
   );
@@ -24,9 +25,11 @@ const Constellation = ({
   gameEnded = false,
   onAnswer,
   onNext,
+  onReplay,
   name,
   answers,
   img,
+  score,
 }) => {
   return (
     <>
@@ -51,9 +54,16 @@ const Constellation = ({
       {showAnswer ? (
         <>
           {gameEnded ? (
-            <></>
+            <div className={`column ${styles.finalScore}`}>
+              <h5>Your score is {score}</h5>
+              <button className={styles.full} onClick={onReplay}>
+                Play again
+              </button>
+            </div>
           ) : (
-            <button onClick={onNext}>Next constellation</button>
+            <button className={styles.full} onClick={onNext}>
+              Next constellation
+            </button>
           )}
           <div className="column">
             <p>
@@ -72,6 +82,18 @@ const Constellation = ({
 
 const constellationReducer = (state, action) => {
   switch (action.type) {
+    case "RESET_STATE":
+      return {
+        ...state,
+        best: localStorage.getItem("best") || 0,
+        isLoading: true,
+        isError: false,
+        showAnswer: false,
+        gameEnded: false,
+        score: 0,
+        answers: [],
+        questions: action.questions,
+      };
     case "CONSTELLATION_FETCH_INIT":
       return { ...state, isLoading: true };
     case "CONSTELLATION_FETCH_SUCCESS":
@@ -182,7 +204,7 @@ const GameContainer = ({ questions = 5 }) => {
   const handleAnswer = (answer) => {
     let tmpScore = constellation.score;
     if (answer === constellation.data.target.name) {
-      tmpScore += 3;
+      tmpScore += 2;
     } else if (tmpScore > 0) {
       tmpScore -= 1;
     }
@@ -204,9 +226,21 @@ const GameContainer = ({ questions = 5 }) => {
     }
   };
 
+  const handlePlayAgain = () => {
+    dispatchConstellation({
+      type: "RESET_STATE",
+      questions: questions,
+    });
+    setRandomConstellation();
+  };
+
   return (
     <div className="column">
-      <Score score={constellation.score} best={constellation.best} />
+      <Score
+        questions={constellation.questions}
+        score={constellation.score}
+        best={constellation.best}
+      />
       <div className={styles.gameContainer}>
         {constellation.isError && <p>Something went wrong</p>}
         {constellation.isLoading ? (
@@ -220,6 +254,8 @@ const GameContainer = ({ questions = 5 }) => {
             img={constellation.data.image.src}
             onAnswer={handleAnswer}
             onNext={handleNext}
+            onReplay={handlePlayAgain}
+            score={constellation.score}
           />
         )}
       </div>

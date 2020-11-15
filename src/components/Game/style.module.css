@@ -50,6 +50,13 @@ button.wrongAnswer:hover, button.wrongAnswer:active, button.wrongAnswer:visited,
   background: #de1d2d;
 }
 
+button.full {
+  background: #5643fd;
+}
+button.full:hover {
+  opacity: 0.7;
+}
+
 @media (min-width: 768px) {
   .answers {
     display: flex;
@@ -62,4 +69,8 @@ button.wrongAnswer:hover, button.wrongAnswer:active, button.wrongAnswer:visited,
     display: flex;
     flex-direction: row;
   }
+}
+
+.finalScore h5 {
+  color:#c2a6ae;
 }
