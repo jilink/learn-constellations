@@ -10,17 +10,18 @@ import ConstellationSketcher, {
 const API_BASE = "https://www.strudel.org.uk/lookUP/json/?name=";
 const getConstellationUrl = (name) => `${API_BASE}${name}`;
 
-const Score = ({ score }) => {
+const Score = ({ score, best }) => {
   return (
     <div className={styles.scoreContainer}>
       <span>SCORE: {score}</span>
-      <span>BEST:</span>
+      <span>BEST: {best}</span>
     </div>
   );
 };
 
 const Constellation = ({
   showAnswer = false,
+  gameEnded = false,
   onAnswer,
   onNext,
   name,
@@ -34,8 +35,8 @@ const Constellation = ({
         {answers.map((answer) =>
           showAnswer ? (
             <button
+              disabled
               className={answer[1] ? styles.rightAnswer : styles.wrongAnswer}
-              onClick={() => onAnswer(answer[0])}
               key={answer[0]}
             >
               {answer[0]}
@@ -49,7 +50,11 @@ const Constellation = ({
       </div>
       {showAnswer ? (
         <>
-          <button onClick={onNext}>Next constellation</button>
+          {gameEnded ? (
+            <></>
+          ) : (
+            <button onClick={onNext}>Next constellation</button>
+          )}
           <div className="column">
             <p>
               Learn more about{" "}
@@ -71,23 +76,44 @@ const constellationReducer = (state, action) => {
       return { ...state, isLoading: true };
     case "CONSTELLATION_FETCH_SUCCESS":
       return { ...state, isLoading: false, data: action.payload };
-    case "CONSTELLATION_FETCH_SUCCESS":
-      return { ...state, isLoading: false, isError: true };
-    case "CONSTELLATION_FETCH_SUCCESS":
+    case "CONSTELLATION_FETCH_ERROR":
       return { ...state, isLoading: false, isError: true };
     case "HAS_ANSWERED":
-      return { ...state, showAnswer: true, score: action.payload };
-    case "HIDE_ANSWER":
+      if (action.questions) {
+        return {
+          ...state,
+          showAnswer: true,
+          score: action.payload,
+          questions: action.questions,
+        };
+      } else if (action.payload > localStorage.getItem("best")) {
+        localStorage.setItem("best", action.payload);
+        return {
+          ...state,
+          showAnswer: true,
+          score: action.payload,
+          best: action.payload,
+          gameEnded: true,
+        };
+      } else {
+        return {
+          ...state,
+          showAnswer: true,
+          score: action.payload,
+          gameEnded: true,
+        };
+      }
+
+    case "NEXT_CONSTELLATION":
       return { ...state, showAnswer: false };
     case "SET_ANSWERS":
       return { ...state, answers: action.payload };
-
     default:
       throw new Error();
   }
 };
 
-const GameContainer = () => {
+const GameContainer = ({ questions = 5 }) => {
   const [constellation, dispatchConstellation] = React.useReducer(
     constellationReducer,
     {
@@ -95,8 +121,11 @@ const GameContainer = () => {
       isLoading: true,
       isError: false,
       showAnswer: false,
+      gameEnded: false,
       score: 0,
+      best: localStorage.getItem("best") || 0,
       answers: [],
+      questions: questions,
     }
   );
 
@@ -134,9 +163,12 @@ const GameContainer = () => {
     tmpAnswers.push([rightAnswer, true]);
     while (tmpAnswers.length < 3) {
       const addToEnd = Math.random() <= 0.5; // 1/2
-      const index = Math.floor(Math.random() * constellationNames.length);
-      const tmpConstellation = constellationNames[index];
-      if (tmpConstellation !== rightAnswer) {
+      let index = Math.floor(Math.random() * constellationNames.length);
+      let tmpConstellation = constellationNames[index];
+      if (
+        tmpConstellation !== rightAnswer &&
+        !tmpAnswers.includes(tmpConstellation)
+      ) {
         if (addToEnd) {
           tmpAnswers.push([tmpConstellation, false]);
         } else {
@@ -150,26 +182,31 @@ const GameContainer = () => {
   const handleAnswer = (answer) => {
     let tmpScore = constellation.score;
     if (answer === constellation.data.target.name) {
-      tmpScore += 2;
+      tmpScore += 3;
     } else if (tmpScore > 0) {
       tmpScore -= 1;
     }
     dispatchConstellation({
       type: "HAS_ANSWERED",
       payload: tmpScore,
+      questions: constellation.questions - 1,
     });
   };
 
   const handleNext = () => {
-    dispatchConstellation({
-      type: "HIDE_ANSWER",
-    });
-    setRandomConstellation();
+    console.log(constellation.questions, "first");
+    if (constellation.questions) {
+      console.log(constellation.questions);
+      dispatchConstellation({
+        type: "NEXT_CONSTELLATION",
+      });
+      setRandomConstellation();
+    }
   };
 
   return (
     <div className="column">
-      <Score score={constellation.score} />
+      <Score score={constellation.score} best={constellation.best} />
       <div className={styles.gameContainer}>
         {constellation.isError && <p>Something went wrong</p>}
         {constellation.isLoading ? (
@@ -177,6 +214,7 @@ const GameContainer = () => {
         ) : (
           <Constellation
             showAnswer={constellation.showAnswer}
+            gameEnded={constellation.gameEnded}
             name={constellation.data.target.name}
             answers={constellation.answers}
             img={constellation.data.image.src}
