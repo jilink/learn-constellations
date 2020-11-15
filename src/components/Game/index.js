@@ -10,9 +10,19 @@ import ConstellationSketcher, {
 const API_BASE = "https://www.strudel.org.uk/lookUP/json/?name=";
 const getConstellationUrl = (name) => `${API_BASE}${name}`;
 
+const Score = ({ score }) => {
+  return (
+    <div className={styles.scoreContainer}>
+      <span>SCORE: {score}</span>
+      <span>BEST:</span>
+    </div>
+  );
+};
+
 const Constellation = ({
   showAnswer = false,
   onAnswer,
+  onNext,
   name,
   answers,
   img,
@@ -37,6 +47,20 @@ const Constellation = ({
           )
         )}
       </div>
+      {showAnswer ? (
+        <>
+          <button onClick={onNext}>Next constellation</button>
+          <div className="column">
+            <p>
+              Learn more about{" "}
+              <a target="_blank" href={img}>
+                {name}
+              </a>
+            </p>
+            <img src={img} />
+          </div>
+        </>
+      ) : null}
     </>
   );
 };
@@ -46,6 +70,7 @@ const GameContainer = () => {
   const [answers, setAnswers] = React.useState([]);
   const [isLoading, setIsLoading] = React.useState(true);
   const [showAnswer, setShowAnswer] = React.useState(false);
+  const [score, setScore] = React.useState(0);
 
   useEffect(() => {
     setRandomConstellation();
@@ -88,28 +113,33 @@ const GameContainer = () => {
   const handleAnswer = (answer) => {
     setShowAnswer(true);
     if (answer === constellation.target.name) {
-      console.log("BRAVO BG");
-    } else {
-      console.log("Nooooo Poto :///", constellation.target.name);
+      setScore(score + 2);
+    } else if (score > 0) {
+      setScore(score - 1);
     }
-    {
-      /*setRandomConstellation();*/
-    }
+  };
+  const handleNext = () => {
+    setShowAnswer(false);
+    setRandomConstellation();
   };
 
   return (
-    <div className={styles.gameContainer}>
-      {isLoading ? (
-        <p> Loading ...</p>
-      ) : (
-        <Constellation
-          showAnswer={showAnswer}
-          name={constellation.target.name}
-          answers={answers}
-          img={constellation.image.src}
-          onAnswer={handleAnswer}
-        />
-      )}
+    <div className="column">
+      <Score score={score} />
+      <div className={styles.gameContainer}>
+        {isLoading ? (
+          <p> Loading ...</p>
+        ) : (
+          <Constellation
+            showAnswer={showAnswer}
+            name={constellation.target.name}
+            answers={answers}
+            img={constellation.image.src}
+            onAnswer={handleAnswer}
+            onNext={handleNext}
+          />
+        )}
+      </div>
     </div>
   );
 };

@@ -3,13 +3,18 @@
   align-items: center;
   justify-content: space-around;
   background: black;
-  margin: 2vw;
+  margin:0 2vw;
 }
-
 @media (max-width: 768px) {
   .gameContainer {
     flex-wrap: wrap;
   }
+}
+
+.scoreContainer {
+  display: flex;
+  justify-content: space-around;
+  margin:1vw 2vw;
 }
 
 button {
@@ -29,15 +34,18 @@ button:hover {
 
 button.rightAnswer {
   border-color: #33be92;
+  cursor: default;
 }
-button.rightAnswer:hover {
+button.rightAnswer:hover, button.rightAnswer:active, button.rightAnswer:visited, button.rightAnswer:focus {
   background: #33be92;
   border-color: #33be92;
 }
+
 button.wrongAnswer {
   border-color: #de1d2d;
+  cursor: default;
 }
-button.wrongAnswer:hover {
+button.wrongAnswer:hover, button.wrongAnswer:active, button.wrongAnswer:visited, button.wrongAnswer:focus {
   border-color: #de1d2d;
   background: #de1d2d;
 }
