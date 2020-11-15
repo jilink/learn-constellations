@@ -65,29 +65,67 @@ const Constellation = ({
   );
 };
 
+const constellationReducer = (state, action) => {
+  switch (action.type) {
+    case "CONSTELLATION_FETCH_INIT":
+      return { ...state, isLoading: true };
+    case "CONSTELLATION_FETCH_SUCCESS":
+      return { ...state, isLoading: false, data: action.payload };
+    case "CONSTELLATION_FETCH_SUCCESS":
+      return { ...state, isLoading: false, isError: true };
+    case "CONSTELLATION_FETCH_SUCCESS":
+      return { ...state, isLoading: false, isError: true };
+    case "HAS_ANSWERED":
+      return { ...state, showAnswer: true, score: action.payload };
+    case "HIDE_ANSWER":
+      return { ...state, showAnswer: false };
+    case "SET_ANSWERS":
+      return { ...state, answers: action.payload };
+
+    default:
+      throw new Error();
+  }
+};
+
 const GameContainer = () => {
-  const [constellation, setConstellation] = React.useState([]);
-  const [answers, setAnswers] = React.useState([]);
-  const [isLoading, setIsLoading] = React.useState(true);
-  const [showAnswer, setShowAnswer] = React.useState(false);
-  const [score, setScore] = React.useState(0);
+  const [constellation, dispatchConstellation] = React.useReducer(
+    constellationReducer,
+    {
+      data: [],
+      isLoading: true,
+      isError: false,
+      showAnswer: false,
+      score: 0,
+      answers: [],
+    }
+  );
 
   useEffect(() => {
     setRandomConstellation();
   }, []);
 
   useEffect(() => {
-    if (constellation.target) setRandomAnwsers(constellation.target.name);
-  }, [constellation]);
+    if (constellation.data.target)
+      setRandomAnwsers(constellation.data.target.name);
+  }, [constellation.data]);
 
   const setRandomConstellation = () => {
-    setIsLoading(true);
+    dispatchConstellation({
+      type: "CONSTELLATION_FETCH_INIT",
+    });
     const index = Math.floor(Math.random() * constellationNames.length);
     axios
       .get(getConstellationUrl(constellationNames[index]))
       .then((response) => {
-        setConstellation(response.data);
-        setIsLoading(false);
+        dispatchConstellation({
+          type: "CONSTELLATION_FETCH_SUCCESS",
+          payload: response.data,
+        });
+      })
+      .catch((error) => {
+        dispatchConstellation({
+          type: "CONSTELLATION_FETCH_ERROR",
+        });
       });
   };
 
@@ -106,35 +144,42 @@ const GameContainer = () => {
         }
       }
     }
-    console.log("array", tmpAnswers);
-    setAnswers(tmpAnswers);
+    dispatchConstellation({ type: "SET_ANSWERS", payload: tmpAnswers });
   };
 
   const handleAnswer = (answer) => {
-    setShowAnswer(true);
-    if (answer === constellation.target.name) {
-      setScore(score + 2);
-    } else if (score > 0) {
-      setScore(score - 1);
+    let tmpScore = constellation.score;
+    if (answer === constellation.data.target.name) {
+      tmpScore += 2;
+    } else if (tmpScore > 0) {
+      tmpScore -= 1;
     }
+    dispatchConstellation({
+      type: "HAS_ANSWERED",
+      payload: tmpScore,
+    });
   };
+
   const handleNext = () => {
-    setShowAnswer(false);
+    dispatchConstellation({
+      type: "HIDE_ANSWER",
+    });
     setRandomConstellation();
   };
 
   return (
     <div className="column">
-      <Score score={score} />
+      <Score score={constellation.score} />
       <div className={styles.gameContainer}>
-        {isLoading ? (
+        {constellation.isError && <p>Something went wrong</p>}
+        {constellation.isLoading ? (
           <p> Loading ...</p>
         ) : (
           <Constellation
-            showAnswer={showAnswer}
-            name={constellation.target.name}
-            answers={answers}
-            img={constellation.image.src}
+            showAnswer={constellation.showAnswer}
+            name={constellation.data.target.name}
+            answers={constellation.answers}
+            img={constellation.data.image.src}
             onAnswer={handleAnswer}
             onNext={handleNext}
           />
