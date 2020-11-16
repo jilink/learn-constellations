@@ -1,6 +1,7 @@
 import React, { useEffect } from "react";
 import axios from "axios";
 import styles from "./style.module.css";
+import ReactLoading from "react-loading";
 
 import ConstellationSketcher, {
   constellationNames,
@@ -244,7 +245,12 @@ const GameContainer = ({ questions = 5 }) => {
       <div className={styles.gameContainer}>
         {constellation.isError && <p>Something went wrong</p>}
         {constellation.isLoading ? (
-          <p> Loading ...</p>
+          <ReactLoading
+            type={"spin"}
+            color={"#5643fd"}
+            height={"20%"}
+            width={"20%"}
+          />
         ) : (
           <Constellation
             showAnswer={constellation.showAnswer}
