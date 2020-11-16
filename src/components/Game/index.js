@@ -1,7 +1,8 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 import styles from "./style.module.css";
 import ReactLoading from "react-loading";
+import ProgressBar from "react-bootstrap/ProgressBar";
 
 import ConstellationSketcher, {
   constellationNames,
@@ -11,11 +12,10 @@ import ConstellationSketcher, {
 const API_BASE = "https://www.strudel.org.uk/lookUP/json/?name=";
 const getConstellationUrl = (name) => `${API_BASE}${name}`;
 
-const Score = ({ score, best, questions }) => {
+const Score = ({ score, best }) => {
   return (
     <div className={styles.scoreContainer}>
       <span>SCORE: {score}</span>
-      <span>CONSTELATIONS LEFT: {questions}</span>
       <span>BEST: {best}</span>
     </div>
   );
@@ -67,12 +67,7 @@ const Constellation = ({
             </button>
           )}
           <div className="column">
-            <p>
-              Learn more about{" "}
-              <a target="_blank" href={img}>
-                {name}
-              </a>
-            </p>
+            <p>Here's a live picture of {name}</p>
             <img src={img} />
           </div>
         </>
@@ -116,6 +111,7 @@ const constellationReducer = (state, action) => {
           showAnswer: true,
           score: action.payload,
           best: action.payload,
+          questions: 0,
           gameEnded: true,
         };
       } else {
@@ -123,6 +119,7 @@ const constellationReducer = (state, action) => {
           ...state,
           showAnswer: true,
           score: action.payload,
+          questions: 0,
           gameEnded: true,
         };
       }
@@ -134,6 +131,18 @@ const constellationReducer = (state, action) => {
     default:
       throw new Error();
   }
+};
+
+const QuestionProgress = ({ left, total }) => {
+  const [now, setNow] = React.useState(0);
+  const computeNow = () => {
+    const percent = ((total - left) * 100) / total;
+    setNow(percent);
+  };
+  useEffect(() => {
+    computeNow();
+  }, [left]);
+  return <ProgressBar variant="info" now={now} />;
 };
 
 const GameContainer = ({ questions = 5 }) => {
@@ -237,11 +246,10 @@ const GameContainer = ({ questions = 5 }) => {
 
   return (
     <div className="column">
-      <Score
-        questions={constellation.questions}
-        score={constellation.score}
-        best={constellation.best}
-      />
+      <div className={styles.upInformations}>
+        <Score score={constellation.score} best={constellation.best} />
+        <QuestionProgress left={constellation.questions} total={questions} />
+      </div>
       <div className={styles.gameContainer}>
         {constellation.isError && <p>Something went wrong</p>}
         {constellation.isLoading ? (

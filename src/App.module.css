@@ -6,7 +6,7 @@
 }
 @media (max-width: 768px) {
   body {
-    background: #000000;
+    background: #000000 !important;
   }
 }
 .container {
