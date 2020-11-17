@@ -2,7 +2,6 @@
   display: flex;
   align-items: center;
   justify-content: space-around;
-  background: black;
   margin:0 2vw;
   min-height: 40vw;
 }
@@ -20,22 +19,9 @@
   margin: 5px 0;
   display: flex;
   justify-content: space-between;
+  font-weight: 600;
 }
 
-button {
-  padding:15px;
-  margin:5px !important;
-  border: 1px solid #5643fd;
-  border-radius: 4px !important;
-  background: transparent;
-  color: white;
-  cursor: pointer;
-  transition: all 0.4s ease-in;
-}
-
-button:hover {
-  background: #7649fe;
-}
 
 button.rightAnswer {
   border-color: #33be92;

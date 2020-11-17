@@ -3,6 +3,7 @@ import axios from "axios";
 import styles from "./style.module.css";
 import ReactLoading from "react-loading";
 import ProgressBar from "react-bootstrap/ProgressBar";
+import SaveScore from "../SaveScore/index";
 
 import ConstellationSketcher, {
   constellationNames,
@@ -57,6 +58,7 @@ const Constellation = ({
           {gameEnded ? (
             <div className={`column ${styles.finalScore}`}>
               <h5>Your score is {score}</h5>
+              <SaveScore score={score} />
               <button className={styles.full} onClick={onReplay}>
                 Play again
               </button>
@@ -145,7 +147,7 @@ const QuestionProgress = ({ left, total }) => {
   return <ProgressBar variant="info" now={now} />;
 };
 
-const GameContainer = ({ questions = 5 }) => {
+const GameContainer = ({ questions = 2 }) => {
   const [constellation, dispatchConstellation] = React.useReducer(
     constellationReducer,
     {
