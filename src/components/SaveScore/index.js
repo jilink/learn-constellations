@@ -1,21 +1,23 @@
 import React from "react";
 import Form from "react-bootstrap/Form";
 import Col from "react-bootstrap/Col";
+import Firebase, { FirebaseContext } from "../Firebase/index";
 
 const SaveScore = ({ score }) => {
   const [username, setUsername] = React.useState(
     localStorage.getItem("username") || ""
   );
   const [submited, setSubmited] = React.useState(false);
+  const firebase = new Firebase();
 
   const handleSubmit = (event) => {
     event.preventDefault();
     if (username) {
       localStorage.setItem("username", username);
-      console.log("ok t'as un nom", username);
       setSubmited(true);
+      firebase.writeNewScore(username, score);
     } else {
-      console.log("but gros you don't have a nom");
+      console.log("no you hav no nam brero");
     }
   };
   const handleChange = (event) => {

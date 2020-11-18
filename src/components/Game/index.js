@@ -228,9 +228,7 @@ const GameContainer = ({ questions = 2 }) => {
   };
 
   const handleNext = () => {
-    console.log(constellation.questions, "first");
     if (constellation.questions) {
-      console.log(constellation.questions);
       dispatchConstellation({
         type: "NEXT_CONSTELLATION",
       });
