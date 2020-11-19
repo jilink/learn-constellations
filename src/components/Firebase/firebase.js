@@ -24,6 +24,20 @@ class Firebase {
       score: score,
     });
   }
+  async getTopScore(limit = 10, type = "normal") {
+    const ref = app.database().ref(type);
+    const scoreList = [];
+    await ref
+      .orderByChild("score")
+      .limitToLast(limit)
+      .on("value", (snapshot) => {
+        snapshot.forEach((snap) => {
+          scoreList.unshift(snap.val());
+        });
+      });
+
+    return scoreList;
+  }
 }
 
 export default Firebase;
