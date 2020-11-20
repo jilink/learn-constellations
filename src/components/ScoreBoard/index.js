@@ -2,13 +2,11 @@ import React from "react";
 import Firebase, { FirebaseContext } from "../Firebase/index";
 
 const ScoreBoard = () => {
-  const firebase = new Firebase();
-  const [scoreList, setScoreList] = React.useState(null);
+  const [scoreList, setScoreList] = React.useState([]);
   const [isLoading, setIsLoading] = React.useState(true);
   React.useEffect(() => {
-    setIsLoading(true);
-    firebase.getTopScore(10).then((response) => {
-      setScoreList(response);
+    const firebase = new Firebase();
+    firebase.getTopScore(10, setScoreList).then((response) => {
       setIsLoading(false);
     });
   }, []);

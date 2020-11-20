@@ -24,7 +24,13 @@ class Firebase {
       score: score,
     });
   }
-  async getTopScore(limit = 10, type = "normal") {
+  async getTopScore(
+    limit = 10,
+    callback = (scoreList) => {
+      console.log("callback", scoreList);
+    },
+    type = "normal"
+  ) {
     const ref = app.database().ref(type);
     const scoreList = [];
     await ref
@@ -34,9 +40,9 @@ class Firebase {
         snapshot.forEach((snap) => {
           scoreList.unshift(snap.val());
         });
+        callback(scoreList);
       });
-
-    return scoreList;
+    return [];
   }
 }
 
