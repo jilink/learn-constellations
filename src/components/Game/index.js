@@ -4,6 +4,7 @@ import styles from "./style.module.css";
 import ReactLoading from "react-loading";
 import ProgressBar from "react-bootstrap/ProgressBar";
 import SaveScore from "../SaveScore/index";
+import ScoreBoard from "../ScoreBoard/index";
 
 import ConstellationSketcher, {
   constellationNames,
@@ -273,6 +274,7 @@ const GameContainer = ({ questions = 2 }) => {
           />
         )}
       </div>
+      <ScoreBoard limit={3} />
     </div>
   );
 };

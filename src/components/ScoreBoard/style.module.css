@@ -1,7 +1,9 @@
 .customTable {
   color:#a8dadc !important;
+  background: #1d1135 !important;
 }
 
-.customTable tr {
-  text-align:center;
+.customTable th,tr {
+  text-align: center;
+  min-width: 50px;
 }

@@ -7,7 +7,7 @@ const App = () => {
   return (
     <div className={styles.container}>
       <h1 className={styles.title}>Learn Constellations</h1>
-      <ScoreBoard />
+      <GameContainer />
     </div>
   );
 };

@@ -27,7 +27,7 @@ const ScoreBoard = ({ limit = 10 }) => {
         >
           <thead>
             <tr>
-              <th>Rank</th>
+              <th>#</th>
               <th>Username</th>
               <th>Score</th>
             </tr>
