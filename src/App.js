@@ -1,14 +1,21 @@
 import React from "react";
 import styles from "./App.module.css";
-import GameContainer from "./components/Game/index";
-import ScoreBoard from "./components/ScoreBoard/index";
+import * as ROUTES from "./constants/routes";
+import GameContainer from "./components/Game";
+import ScoreBoard from "./components/ScoreBoard";
+import Navigation from "./components/Navigation";
+import { BrowserRouter as Router, Route } from "react-router-dom";
 
 const App = () => {
   return (
-    <div className={styles.container}>
-      <h1 className={styles.title}>Learn Constellations</h1>
-      <GameContainer />
-    </div>
+    <Router>
+      <div className={styles.container}>
+        <Navigation />
+        {/*<Route exact path={ROUTES.LANDING} component={LandingPage} />*/}
+        <Route path={ROUTES.PLAY} component={GameContainer} />
+        <Route path={ROUTES.LEADERBOARD} component={ScoreBoard} />
+      </div>
+    </Router>
   );
 };
 

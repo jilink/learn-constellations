@@ -1,0 +1,35 @@
+ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  background-color: #000000 !important;
+  overflow:hidden;
+  display:flex;
+  align-items: center;
+  height: inherit;
+}
+li {
+  display: inline;
+}
+li a {
+  display: block;
+  color: white;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+  transition: all 0.2s ease-in;
+  display: flex;
+}
+li a:hover {
+  color: #a8dadc;
+  text-decoration: none;
+}
+
+a:link {
+  color:inherit;
+}
+
+.brand {
+  font-size: 25px;
+  font-weight: bold;
+}
