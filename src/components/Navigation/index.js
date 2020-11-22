@@ -7,7 +7,7 @@ const Navigation = () => (
   <div>
     <ul>
       <li className={styles.brand}>
-        <Link to={ROUTES.LANDING}>Learn Constellations</Link>
+        <Link to={ROUTES.LANDING}>Home</Link>
       </li>
       <li>
         <Link to={ROUTES.PLAY}>Play</Link>
