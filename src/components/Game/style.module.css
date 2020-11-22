@@ -65,3 +65,7 @@ button.full:hover {
 .finalScore h5 {
   color:#c2a6ae;
 }
+
+p a {
+  color:#007bff !important;
+}

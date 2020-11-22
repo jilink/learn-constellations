@@ -70,8 +70,12 @@ const Constellation = ({
             </button>
           )}
           <div className="column">
-            <p>Here's a live picture of {name}</p>
-            <img src={img} />
+            <p>
+              Here's a live picture of{" "}
+              <a target="_blank" href={img}>
+                {name}
+              </a>
+            </p>
           </div>
         </>
       ) : null}

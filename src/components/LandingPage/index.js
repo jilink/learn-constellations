@@ -21,9 +21,9 @@ const LandingPage = () => {
       </Link>
       <div className={styles.content}>
         <p>
-          This is a version beta of the web application, so all you can do for
-          now is learn about how consellations look. After some feedback we will
-          progressively be adding more content about them.
+          This is a beta version of the web application, so all you can do for
+          now is learn about how consellations look like. After some feedback we
+          will progressively be adding more content about them.
         </p>
         <p>
           If you are a developer and you want to build something similar, this
@@ -33,8 +33,8 @@ const LandingPage = () => {
           </a>{" "}
           that I recommend you to check out. I also use this{" "}
           <a href="https://www.strudel.org.uk/lookUP/">API</a> to display the
-          live pictures of each constellations. Since it is not too much data I
-          to take care of, I only used Firebase to save the scores to the
+          live pictures of each constellations. Since it is not too much data to
+          take care of, I only used Firebase to save the scores to the
           leaderboard.
         </p>
       </div>
