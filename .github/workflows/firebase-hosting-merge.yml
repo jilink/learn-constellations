@@ -8,7 +8,7 @@ on:
       - main
 jobs:
   build:
-    name: Build
+    name: Build_and_deploy
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repo
@@ -22,11 +22,6 @@ jobs:
         with:
           name: build
           path: build
-  deploy:
-		name: Deploy
-		needs: build
-		runs-on: ubuntu-latest
-		steps:
 			- name: Checkout Repo
 				uses: actions/checkout@v2.3.2
 			- name: Download Artifact
