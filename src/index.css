@@ -34,3 +34,14 @@ button {
 button:hover {
   background: #7649fe;
 }
+
+button.full {
+  background: #5643fd;
+}
+button.full:hover {
+  opacity: 0.7;
+}
+
+button.large {
+  padding: 20px;
+}

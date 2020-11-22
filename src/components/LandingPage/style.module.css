@@ -2,4 +2,10 @@
   background: #242956;
   display: flex;
   justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+.content {
+  padding: 25px;
 }

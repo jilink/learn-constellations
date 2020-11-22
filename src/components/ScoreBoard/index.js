@@ -3,7 +3,7 @@ import Firebase, { FirebaseContext } from "../Firebase/index";
 import Table from "react-bootstrap/Table";
 import styles from "./style.module.css";
 
-const ScoreBoard = ({ limit = 10 }) => {
+const ScoreBoard = ({ limit = 30 }) => {
   const [scoreList, setScoreList] = React.useState([]);
   const [isLoading, setIsLoading] = React.useState(true);
   React.useEffect(() => {

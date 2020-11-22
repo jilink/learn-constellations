@@ -148,7 +148,7 @@ const QuestionProgress = ({ left, total }) => {
   return <ProgressBar variant="info" now={now} />;
 };
 
-const GameContainer = ({ questions = 2 }) => {
+const GameContainer = ({ questions = 15 }) => {
   const [constellation, dispatchConstellation] = React.useReducer(
     constellationReducer,
     {
